@@ -1,13 +1,5 @@
 import Image from "next/image";
-import {
-  Component,
-  FC,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { FC, ReactNode, useCallback, useMemo, useState } from "react";
 import styles from "./result.module.css";
 import cx from "classnames";
 import { RULE } from "@/constants/rule";
@@ -98,19 +90,6 @@ const PickColumn: FC<{
 
 const ResultRow: FC<{ children: ReactNode }> = ({ children }) => {
   const [isAlphaWon, setIsAlphaWon] = useState<boolean>();
-
-  const toggleResult = useCallback(() => {
-    setIsAlphaWon((prev) => {
-      if (prev === undefined) {
-        return true;
-      }
-      if (prev === true) {
-        return false;
-      }
-      return undefined;
-    });
-  }, []);
-
   const toggleAlphaWon = useCallback(() => {
     setIsAlphaWon((prev) => {
       return prev === undefined ? true : undefined;
@@ -197,6 +176,7 @@ export const Result: FC<{
     return activeStages.filter((stage) => !stage.isBanned);
   }, [activeStages]);
 
+  //   TODO: activeStagesの選択が切り替わったら、選択状態を全て削除しているが、雑実装なので要修正
   const rowIds = useMemo(() => {
     return new Array(MAX_GAME).fill(0).map(() => {
       return `${Math.random()}`;

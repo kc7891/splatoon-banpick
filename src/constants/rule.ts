@@ -1,3 +1,4 @@
+// TODO: ルール選択時にルールアイコンが表示されるようにする
 export const RULE = {
   yagura: {
     name: "ガチヤグラ",
