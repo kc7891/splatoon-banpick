@@ -127,6 +127,8 @@ img {
   vertical-align: middle;
 }
 
+select,
+option,
 input[type="button"],
 input[type="text"],
 input[type="submit"],
