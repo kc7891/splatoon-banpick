@@ -3,6 +3,7 @@ import { FC, useCallback } from "react";
 import { noop } from "@/logics/noop";
 import { StageState } from "@/hooks/useAppState";
 import styles from "./stages.module.css";
+import { Block } from "../svg/block";
 
 const Stage: FC<{
   name: string;
@@ -21,7 +22,13 @@ const Stage: FC<{
   return (
     <div className={styles.stageContainer}>
       <button onClick={isBanned ? handleUnBan : handleBan}>
-        {isBanned && <div className={styles.overlay}>⚠</div>}
+        {isBanned ? (
+          <div className={styles.overlay}>
+            <Block className={styles.blockIcon} />
+          </div>
+        ) : (
+          <div className={styles.banButton}>+</div>
+        )}
         <figure>
           <figcaption className={styles.caption}>{name}</figcaption>
           <Image
