@@ -3,12 +3,15 @@
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .stageContainer {
   width: 50%;
   position: relative;
   max-width: 400px;
+  border: 1px solid black;
 }
 
 .overlay {
@@ -33,5 +36,9 @@
 .caption {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.8);
-  padding: 10px 15px;
+  padding: 10px 10px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
 }

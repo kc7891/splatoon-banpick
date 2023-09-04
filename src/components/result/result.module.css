@@ -1,0 +1,105 @@
+.container {
+  margin-top: 20px;
+  max-width: 1200px;
+}
+
+.row {
+  margin-top: 3px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.header .teamCol {
+  padding: 20px 10px;
+  text-align: center;
+  width: 48%;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.header .alphaCol {
+  color: #fff;
+  background-color: var(--teamAlpha);
+  text-align: left;
+}
+
+.header .bravoCol {
+  color: rgba(0, 0, 0, 0.9);
+  background-color: var(--teamBravo);
+  text-align: right;
+}
+
+.teamCol {
+  width: 24%;
+}
+
+.content .teamCol {
+  display: flex;
+  align-items: center;
+}
+
+.pickCol {
+  width: 52%;
+  margin: 0 3px;
+}
+
+.pickColumnContainer {
+  position: relative;
+}
+
+.stageSelect {
+  position: absolute;
+  height: 40%;
+  border: 0px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  max-width: 90%;
+}
+
+.ruleSelect {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 40%;
+  border: 0px;
+  background-color: rgba(0, 0, 0, 0.6);
+  text-align: right;
+  color: #fff;
+}
+
+.stageImage {
+  width: 100%;
+  height: auto;
+}
+
+.stagePlaceholder {
+  aspect-ratio: 400 / 227;
+  background-color: var(--neutral);
+}
+
+.resultButton {
+  width: 100%;
+  font-weight: bold;
+  height: 100px;
+  font-size: 28px;
+}
+
+.lose {
+  color: var(--neutral);
+}
+
+.alphaWon {
+  background-color: var(--teamAlpha);
+  color: #fff;
+}
+
+.bravoWon {
+  background-color: var(--teamBravo);
+  color: rgba(0, 0, 0, 0.9);
+}

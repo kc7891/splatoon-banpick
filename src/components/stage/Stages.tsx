@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback } from "react";
 import { noop } from "@/logics/noop";
 import { StageState } from "@/hooks/useAppState";
 import styles from "./stages.module.css";

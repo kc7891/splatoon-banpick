@@ -28,7 +28,7 @@ export default function Home() {
           state={appState.stageState}
           onChangeStageState={setStageState}
         />
-        <Result />
+        <Result activeStages={appState.stageState.activeStatges} />
       </main>
     )
   );
