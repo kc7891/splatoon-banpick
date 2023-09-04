@@ -77,6 +77,24 @@
   font-size: 14px;
 }
 
+.ruleSelect.hide {
+  opacity: 0;
+}
+
+.ruleIconContainer {
+  position: absolute;
+  bottom: 0;
+  width: 25%;
+  max-width: 100px;
+  background-color: rgba(0, 0, 0, 0.6);
+  right: 0;
+}
+
+.ruleIcon {
+  width: 100%;
+  height: auto;
+}
+
 .stageImage {
   width: 100%;
   height: auto;

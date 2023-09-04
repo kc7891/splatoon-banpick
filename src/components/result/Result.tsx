@@ -9,11 +9,18 @@ const PickColumn: FC<{
   activeStages: { name: string; path: string }[];
 }> = ({ activeStages }) => {
   const [stageIndex, setStageIndex] = useState<number>(-1);
-  const [rule, setRule] = useState<string>("");
+  const [ruleKey, setRuleKey] = useState<string>("");
 
   const stage = useMemo(
     () => activeStages[stageIndex],
     [activeStages, stageIndex],
+  );
+  const rule = useMemo(
+    () =>
+      ruleKey in RULE
+        ? ((RULE as any)[ruleKey] as (typeof RULE)[keyof typeof RULE])
+        : undefined,
+    [ruleKey],
   );
   const { name, path } = stage || {};
 
@@ -32,9 +39,10 @@ const PickColumn: FC<{
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const value = e.target.value;
       if (!value) {
+        setRuleKey("");
         return;
       }
-      setRule(value);
+      setRuleKey(value);
     },
     [],
   );
@@ -56,9 +64,20 @@ const PickColumn: FC<{
             );
           })}
         </select>
+        <div className={styles.ruleIconContainer}>
+          {rule?.path && (
+            <Image
+              className={styles.ruleIcon}
+              src={rule.path}
+              alt={rule.name}
+              width="128"
+              height="128"
+            />
+          )}
+        </div>
         <select
-          className={styles.ruleSelect}
-          value={rule}
+          className={cx(styles.ruleSelect, { [styles.hide]: rule })}
+          value={ruleKey}
           onChange={handleSelectRule}
         >
           <option value="">ルール選択</option>
