@@ -12,6 +12,6 @@ export const RULE = {
     name: "ガチアサリ",
   },
   nawabari: {
-    name: "ナワバリバトル",
+    name: "ナワバリ",
   },
 } as const;

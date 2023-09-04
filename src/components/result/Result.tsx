@@ -55,7 +55,7 @@ const PickColumn: FC<{
           value={`${stageIndex}`}
           onChange={handleSelectStage}
         >
-          <option value="-1">マップを選ぶ</option>
+          <option value="-1">マップ選択</option>
           {activeStages.map((stage, index) => {
             return (
               <option key={stage.name} value={index}>
@@ -69,7 +69,7 @@ const PickColumn: FC<{
           value={rule}
           onChange={handleSelectRule}
         >
-          <option value="">ルールを選ぶ</option>
+          <option value="">ルール選択</option>
           {Object.entries(RULE).map(([key, data]) => {
             return (
               <option key={key} value={key}>
