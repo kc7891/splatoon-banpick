@@ -61,6 +61,7 @@
   color: #fff;
   max-width: 90%;
   min-width: 40%;
+  font-size: 14px;
 }
 
 .ruleSelect {
@@ -73,6 +74,7 @@
   text-align: right;
   color: #fff;
   min-width: 20%;
+  font-size: 14px;
 }
 
 .stageImage {
