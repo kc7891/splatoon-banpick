@@ -3,7 +3,7 @@ import { FC, useCallback } from "react";
 import { noop } from "@/logics/noop";
 import { StageState } from "@/hooks/useAppState";
 import styles from "./stages.module.css";
-import { Block } from "../svg/block";
+import { Block } from "../svg/Block";
 
 const Stage: FC<{
   name: string;
