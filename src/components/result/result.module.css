@@ -18,7 +18,7 @@
 .header .teamCol {
   padding: 20px 10px;
   text-align: center;
-  width: 48%;
+  flex-grow: 1;
   font-size: 20px;
   font-weight: bold;
 }
@@ -27,6 +27,7 @@
   color: #fff;
   background-color: var(--teamAlpha);
   text-align: left;
+  margin-right: 3px;
 }
 
 .header .bravoCol {
@@ -108,7 +109,7 @@
 .resultButton {
   width: 100%;
   font-weight: bold;
-  height: 100px;
+  height: 100%;
   font-size: 28px;
 }
 
