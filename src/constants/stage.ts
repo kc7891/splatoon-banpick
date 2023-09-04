@@ -1,9 +1,9 @@
-type Stage = {
+type StageShape = {
   name: string;
   path: string;
 };
 
-export const STAGE: { [key: string]: Stage } = {
+export const STAGE: { [key: string]: StageShape } = {
   yunohana: { name: "ユノハナ大渓谷", path: "/stage/S3_yunohana.png" },
   gonzui: { name: "ゴンズイ地区", path: "/stage/S3_gonzui.png" },
   yagara: { name: "ヤガラ市場", path: "/stage/S3_yagara.png" },
@@ -28,3 +28,5 @@ export const STAGE: { [key: string]: Stage } = {
   takaashi: { name: "タカアシ経済特区", path: "/stage/S3_takaashi.png" },
   ohyo: { name: "オヒョウ海運", path: "/stage/S3_ohyo.png" },
 } as const;
+
+export type StageKey = keyof typeof STAGE;

@@ -1,20 +1,35 @@
-import Image from "next/image";
+"use client";
 import styles from "./page.module.css";
-import { STAGE } from "./constants/stage";
+import { Result } from "@/components/result/Result";
+import { Stages } from "@/components/stage/Stages";
+import { StageState, useAppState } from "@/hooks/useAppState";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Home() {
+  const [appState, setAppState] = useAppState();
+  const [isClient, setIsClient] = useState(false);
+
+  // TODO: search best practice
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const setStageState = useCallback(
+    (state: StageState) => {
+      setAppState({ stageState: state });
+    },
+    [setAppState],
+  );
+
   return (
-    <main className={styles.main}>
-      <div>
-        {Object.entries(STAGE).map(([key, data]) => {
-          return (
-            <div key={key}>
-              <h1>{data.name}</h1>
-              <Image src={data.path} alt={data.name} width="400" height="227" />
-            </div>
-          );
-        })}
-      </div>
-    </main>
+    isClient && (
+      <main className={styles.main}>
+        <Stages
+          state={appState.stageState}
+          onChangeStageState={setStageState}
+        />
+        <Result />
+      </main>
+    )
   );
 }
