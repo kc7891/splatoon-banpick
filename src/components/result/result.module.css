@@ -1,5 +1,5 @@
 .container {
-  margin-top: 20px;
+  margin: 20px auto;
   max-width: 1200px;
 }
 
@@ -60,6 +60,7 @@
   background-color: rgba(0, 0, 0, 0.6);
   color: #fff;
   max-width: 90%;
+  min-width: 40%;
 }
 
 .ruleSelect {
@@ -71,6 +72,7 @@
   background-color: rgba(0, 0, 0, 0.6);
   text-align: right;
   color: #fff;
+  min-width: 20%;
 }
 
 .stageImage {
