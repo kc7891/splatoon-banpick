@@ -1,5 +1,6 @@
 "use client";
 import styles from "./page.module.css";
+import { Header } from "@/components/header/Header";
 import { Result } from "@/components/result/Result";
 import { Stages } from "@/components/stage/Stages";
 import { StageState, useAppState } from "@/hooks/useAppState";
@@ -24,6 +25,7 @@ export default function Home() {
   return (
     isClient && (
       <main className={styles.main}>
+        <Header />
         <Stages
           state={appState.stageState}
           onChangeStageState={setStageState}
