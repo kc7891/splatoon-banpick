@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 // Import the functions you need from the SDKs you need
 import { FirebaseApp, initializeApp } from "firebase/app";
-import { getDatabase, ref, set, onValue, Database } from "firebase/database";
+import { getDatabase, ref, set, onValue, database } from "firebase/database";
 import { SessionData } from "@/types/database";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -44,9 +44,22 @@ export const useSessionDatabase = (sessionId: string) => {
     [sessionId],
   );
 
+  const visibilitychange = useCallback(() => {
+    if (document.visibilityState === "visible") {
+      database.goOnline();
+    }
+
+    if (document.visibilityState === "hidden") {
+      database.goOffline();
+    }
+  }, []);
+
   useEffect(() => {
     appRef.current = initializeApp(firebaseConfig);
-  }, []);
+
+    document.addEventListener("visibilitychange", visibilitychange);
+    return document.removeEventListener("visibilitychange", visibilitychange);
+  }, [visibilitychange]);
 
   return appRef.current ? ([setValue, onValueChange] as const) : ([] as const);
 };
