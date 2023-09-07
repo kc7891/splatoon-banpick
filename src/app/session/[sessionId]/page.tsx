@@ -71,7 +71,7 @@ export default function Session() {
     isClient && (
       <main className={styles.main}>
         <Header>
-          <button onClick={setNewStage}>Stageを更新</button>
+          <button onClick={setNewStage}>Stageをセット</button>
         </Header>
         <Stages stages={appState.stages} onChangeStageState={setDatabase} />
         <Result

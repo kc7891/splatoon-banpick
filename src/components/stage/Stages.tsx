@@ -63,6 +63,11 @@ export const Stages: FC<{
           }
           return data;
         }),
+        result: [
+          { pickedStageKey: "none" },
+          { pickedStageKey: "none" },
+          { pickedStageKey: "none" },
+        ],
       });
     },
     [onChangeStageState, stages],
@@ -85,6 +90,10 @@ export const Stages: FC<{
   return (
     <div className={styles.stagesContainer}>
       {stages.map(({ stageKey, bannedBy }) => {
+        if (stageKey === "none") {
+          return null;
+        }
+
         const { name, path } = STAGE[stageKey];
         return (
           <Stage

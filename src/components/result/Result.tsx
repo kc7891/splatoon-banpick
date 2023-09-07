@@ -5,7 +5,7 @@ import cx from "classnames";
 import { RULE } from "@/constants/rule";
 import { AppState } from "@/hooks/useAppState";
 import { STAGE, StageKey } from "@/constants/stage";
-import { RuleType } from "@/types/database";
+import { RuleType, TeamType } from "@/types/database";
 
 const PickColumn: FC<{
   stageKey?: StageKey;
@@ -110,28 +110,28 @@ const PickColumn: FC<{
   );
 };
 
-const ResultRow: FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAlphaWon, setIsAlphaWon] = useState<boolean>();
+const ResultRow: FC<{
+  children: ReactNode;
+  wonBy: TeamType;
+  onChangeWonBy: (teamType: TeamType) => void;
+}> = ({ children, wonBy, onChangeWonBy }) => {
   const toggleAlphaWon = useCallback(() => {
-    setIsAlphaWon((prev) => {
-      return prev === undefined ? true : undefined;
-    });
-  }, []);
+    onChangeWonBy(wonBy === "alpha" ? "none" : "alpha");
+  }, [onChangeWonBy, wonBy]);
 
   const toggleBravoWon = useCallback(() => {
-    setIsAlphaWon((prev) => {
-      return prev === undefined ? false : undefined;
-    });
-  }, []);
+    onChangeWonBy(wonBy === "bravo" ? "none" : "bravo");
+  }, [onChangeWonBy, wonBy]);
 
   const result = useMemo(() => {
-    if (isAlphaWon === undefined) {
-      return {};
+    if (wonBy === "alpha") {
+      return { alpha: "WIN", bravo: "LOSE" };
     }
-    return isAlphaWon
-      ? { alpha: "WIN", bravo: "LOSE" }
-      : { alpha: "LOSE", bravo: "WIN" };
-  }, [isAlphaWon]);
+    if (wonBy === "bravo") {
+      return { alpha: "LOSE", bravo: "WIN" };
+    }
+    return {};
+  }, [wonBy]);
 
   return (
     <>
@@ -139,21 +139,21 @@ const ResultRow: FC<{ children: ReactNode }> = ({ children }) => {
         className={cx(
           styles.teamCol,
           styles.alphaCol,
-          isAlphaWon === undefined
-            ? ""
-            : isAlphaWon
+          wonBy === "alpha"
             ? styles.alphaWon
-            : styles.lose,
+            : wonBy === "bravo"
+            ? styles.lose
+            : "",
         )}
       >
         <button
           className={cx(
             styles.resultButton,
-            isAlphaWon === undefined
-              ? ""
-              : isAlphaWon
+            wonBy === "alpha"
               ? styles.alphaWon
-              : styles.lose,
+              : wonBy === "bravo"
+              ? styles.lose
+              : "",
           )}
           onClick={toggleAlphaWon}
         >
@@ -165,21 +165,21 @@ const ResultRow: FC<{ children: ReactNode }> = ({ children }) => {
         className={cx(
           styles.teamCol,
           styles.bravoCol,
-          isAlphaWon === undefined
-            ? ""
-            : isAlphaWon
+          wonBy === "bravo"
+            ? styles.bravoWon
+            : wonBy === "alpha"
             ? styles.lose
-            : styles.bravoWon,
+            : "",
         )}
       >
         <button
           className={cx(
             styles.resultButton,
-            isAlphaWon === undefined
-              ? ""
-              : isAlphaWon
+            wonBy === "bravo"
+              ? styles.bravoWon
+              : wonBy === "alpha"
               ? styles.lose
-              : styles.bravoWon,
+              : "",
           )}
           onClick={toggleBravoWon}
         >
@@ -202,15 +202,34 @@ export const Result: FC<{
   }, [stages]);
 
   const updateResult = useCallback(
-    (index: number, stageKey: StageKey, ruleKey: RuleType) => {
+    (
+      index: number,
+      {
+        stageKey,
+        ruleKey,
+        wonBy,
+      }: { stageKey?: StageKey; ruleKey?: RuleType; wonBy?: TeamType },
+    ) => {
       if (!onChangeState) return;
       onChangeState({
         result: results.map((data, i) => {
           if (i === index) {
-            return {
+            const update = {
+              ...data,
               pickedStageKey: stageKey,
               pickedRule: ruleKey,
+              wonBy,
             };
+
+            Object.keys(update).forEach((key) => {
+              // @ts-ignore 眠いので無視
+              if (update[key] === undefined) {
+                // @ts-ignore
+                delete update[key];
+              }
+            });
+
+            return update;
           }
           return data;
         }),
@@ -229,13 +248,26 @@ export const Result: FC<{
         {results?.map((data, index) => {
           return (
             <li key={index} className={cx(styles.row, styles.content)}>
-              <ResultRow>
+              <ResultRow
+                wonBy={data.wonBy || "none"}
+                onChangeWonBy={(teamType) => {
+                  updateResult(index, {
+                    stageKey: data.pickedStageKey,
+                    ruleKey: data.pickedRule,
+                    wonBy: teamType,
+                  });
+                }}
+              >
                 <PickColumn
                   stageKey={data.pickedStageKey}
                   ruleKey={data.pickedRule}
                   stages={availableStageKeys}
-                  onChangeValue={(stageKey, rule) =>
-                    updateResult(index, stageKey, rule)
+                  onChangeValue={(stageKey, ruleKey) =>
+                    updateResult(index, {
+                      stageKey,
+                      ruleKey,
+                      wonBy: data.wonBy,
+                    })
                   }
                 />
               </ResultRow>
