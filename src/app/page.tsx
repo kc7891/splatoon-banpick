@@ -7,12 +7,16 @@ import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
-  const sessionRef = useRef<string>(generateId());
+  const sessionRef = useRef<string>();
 
   // TODO: search best practice
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  if (isClient) {
+    sessionRef.current = generateId();
+  }
 
   return (
     isClient && (
