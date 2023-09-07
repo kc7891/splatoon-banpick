@@ -1,10 +1,13 @@
 "use client";
 import styles from "./page.module.css";
 import { Header } from "@/components/header/Header";
-import { useEffect, useState } from "react";
+import { generateId } from "@/logics/generateHash";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
   const [isClient, setIsClient] = useState(false);
+  const sessionRef = useRef<string>(generateId());
 
   // TODO: search best practice
   useEffect(() => {
@@ -17,7 +20,12 @@ export default function Home() {
         <Header />
         <div className={styles.container}>
           <h1>Banpicktoon</h1>
-          <button className={styles.newSession}>新しく始める</button>
+          <Link
+            href={`/session/${sessionRef.current}`}
+            className={styles.newSession}
+          >
+            新しく始める
+          </Link>
         </div>
       </main>
     )

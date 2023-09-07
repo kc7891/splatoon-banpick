@@ -1,28 +1,27 @@
-import { STAGE } from "@/constants/stage";
-import { getRandomStages } from "@/logics/stage/getRandomStages";
+import { StageKey } from "@/constants/stage";
+import { TeamType, RuleType } from "@/types/database";
 import { useState } from "react";
 
-export type StageState = {
-  activeStatges: Array<
-    (typeof STAGE)[keyof typeof STAGE] & {
-      isBanned?: boolean;
-      bannedBy?: string;
-    }
-  >;
-};
-
-type State = {
-  stageState: StageState;
+export type AppState = {
+  stages: Array<{
+    stageKey: StageKey;
+    bannedBy: TeamType;
+  }>;
+  result: Array<{
+    pickedStageKey: StageKey;
+    pickedBy: TeamType;
+    pickedRule: RuleType;
+    wonBy: TeamType;
+  }>;
 };
 
 export const useAppState = () => {
-  const [state, setState] = useState<State>({
-    stageState: {
-      activeStatges: getRandomStages(6).map((e) => ({ ...e, isBanned: false })),
-    },
+  const [state, setState] = useState<AppState>({
+    stages: [],
+    result: [],
   });
 
-  const setPartialState = (partialState: Partial<State>) => {
+  const setPartialState = (partialState: Partial<AppState>) => {
     setState((prevState) => {
       return { ...prevState, ...partialState };
     });

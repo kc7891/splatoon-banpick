@@ -3,7 +3,7 @@ type StageShape = {
   path: string;
 };
 
-export const STAGE: { [key: string]: StageShape } = {
+export const STAGE = {
   yunohana: { name: "ユノハナ大渓谷", path: "/stage/S3_yunohana.png" },
   gonzui: { name: "ゴンズイ地区", path: "/stage/S3_gonzui.png" },
   yagara: { name: "ヤガラ市場", path: "/stage/S3_yagara.png" },

@@ -3,7 +3,8 @@ import { FC, ReactNode, useCallback, useMemo, useState } from "react";
 import styles from "./result.module.css";
 import cx from "classnames";
 import { RULE } from "@/constants/rule";
-import { StageState } from "@/hooks/useAppState";
+import { AppState } from "@/hooks/useAppState";
+import { STAGE } from "@/constants/stage";
 
 const PickColumn: FC<{
   activeStages: { name: string; path: string }[];
@@ -189,10 +190,16 @@ const ResultRow: FC<{ children: ReactNode }> = ({ children }) => {
 
 const MAX_GAME = 3;
 export const Result: FC<{
-  activeStages: StageState["activeStatges"];
-}> = ({ activeStages }) => {
+  stages: AppState["stages"];
+}> = ({ stages: activeStages }) => {
   const availableStages = useMemo(() => {
-    return activeStages.filter((stage) => !stage.isBanned);
+    const activeStageKeys = activeStages.filter(
+      (stage) => stage.bannedBy !== "none",
+    );
+    return activeStageKeys.map((stage) => {
+      const { name, path } = STAGE[stage.stageKey];
+      return { name, path };
+    });
   }, [activeStages]);
 
   //   TODO: activeStagesの選択が切り替わったら、選択状態を全て削除しているが、雑実装なので要修正

@@ -1,23 +1,26 @@
 import Image from "next/image";
 import { FC, useCallback } from "react";
 import { noop } from "@/logics/noop";
-import { StageState } from "@/hooks/useAppState";
 import styles from "./stages.module.css";
 import { Block } from "../svg/Block";
+import { AppState } from "@/hooks/useAppState";
+import { TeamType } from "@/types/database";
+import { STAGE } from "@/constants/stage";
 
 const Stage: FC<{
+  stageKey: string;
   name: string;
   imgPath: string;
   isBanned?: boolean;
   onBan?: (targetName: string) => void;
   onUnban?: (targetName: string) => void;
-}> = ({ name, imgPath, isBanned, onBan = noop, onUnban = noop }) => {
+}> = ({ stageKey, name, imgPath, isBanned, onBan = noop, onUnban = noop }) => {
   const handleBan = useCallback(() => {
-    onBan(name);
-  }, [name, onBan]);
+    onBan(stageKey);
+  }, [stageKey, onBan]);
   const handleUnBan = useCallback(() => {
-    onUnban(name);
-  }, [name, onUnban]);
+    onUnban(stageKey);
+  }, [stageKey, onUnban]);
 
   return (
     <div className={styles.stageContainer}>
@@ -45,52 +48,51 @@ const Stage: FC<{
 };
 
 export const Stages: FC<{
-  state: StageState;
-  onChangeStageState: (state: StageState) => void;
-}> = ({ state, onChangeStageState = noop }) => {
-  const { activeStatges } = state;
-
+  stages: AppState["stages"];
+  onChangeStageState?: (stages: Partial<AppState>) => void;
+}> = ({ stages, onChangeStageState = noop }) => {
   const switchBan = useCallback(
-    (targetName: string, isBanned: boolean) => {
+    (targetKey: string, bannedBy: TeamType) => {
       onChangeStageState({
-        activeStatges: activeStatges.map((data) => {
-          if (data.name === targetName) {
+        stages: stages.map((data) => {
+          if (data.stageKey === targetKey) {
             return {
               ...data,
-              isBanned,
+              bannedBy,
             };
           }
           return data;
         }),
       });
     },
-    [activeStatges, onChangeStageState],
+    [onChangeStageState, stages],
   );
 
   const handleBan = useCallback(
-    (targetName: string) => {
-      switchBan(targetName, true);
+    (targetKey: string) => {
+      switchBan(targetKey, "admin");
     },
     [switchBan],
   );
 
   const handleUnban = useCallback(
     (targetName: string) => {
-      switchBan(targetName, false);
+      switchBan(targetName, "none");
     },
     [switchBan],
   );
 
   return (
     <div className={styles.stagesContainer}>
-      {activeStatges.map((data) => {
-        const { name, path, isBanned } = data;
+      {stages.map(({ stageKey, bannedBy }) => {
+        const { name, path } = STAGE[stageKey];
         return (
           <Stage
-            key={data.name}
+            key={stageKey}
+            stageKey={stageKey}
             name={name}
             imgPath={path}
-            isBanned={isBanned}
+            isBanned={bannedBy !== "none"}
             onBan={handleBan}
             onUnban={handleUnban}
           />

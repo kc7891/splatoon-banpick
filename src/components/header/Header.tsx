@@ -1,10 +1,10 @@
-import { FC } from "react";
+import { FC, ReactNode } from "react";
 import styles from "./header.module.css";
 import cx from "classnames";
 import { AiOutlineHome } from "react-icons/ai";
 import Link from "next/link";
 
-export const Header: FC = () => {
+export const Header: FC<{ children?: ReactNode }> = ({ children }) => {
   return (
     <>
       <nav className={styles.container}>
@@ -14,10 +14,7 @@ export const Header: FC = () => {
               <AiOutlineHome />
             </Link>
           </li>
-          <li>
-            {/* TODO: ヘルプの準備ができたら表示 */}
-            {/* <BiHelpCircle /> */}
-          </li>
+          <li>{children}</li>
         </ul>
       </nav>
       {/* spacer */}

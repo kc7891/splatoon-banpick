@@ -1,7 +1,7 @@
 import { STAGE } from "@/constants/stage";
 
-export const getRandomStages = (stageCount: number) => {
-  const stages = Object.values(STAGE);
+export const getRandomStageKeys = (stageCount: number) => {
+  const stageKeys = Object.keys(STAGE) as Array<keyof typeof STAGE>;
   // shuffle stages and pick stages.
-  return stages.sort(() => Math.random() - 0.5).slice(0, stageCount);
+  return stageKeys.sort(() => Math.random() - 0.5).slice(0, stageCount);
 };
