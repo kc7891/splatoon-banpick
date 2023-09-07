@@ -1,3 +1,36 @@
 .main {
   min-height: 100vh;
 }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  margin-top: 100px;
+}
+
+.newSession {
+  color: #fff;
+  font-weight: bold;
+  font-size: 15px;
+  border-radius: 6px;
+  padding: 14px 20px;
+  width: 78%;
+  max-width: 500px;
+  background: linear-gradient(
+    90deg,
+    rgba(96, 59, 255, 1) 0%,
+    rgba(78, 231, 153, 1) 50%,
+    rgba(234, 255, 61, 1) 100%
+  );
+  margin-top: 50px;
+}
+
+.sessionIdContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 25px;
+}

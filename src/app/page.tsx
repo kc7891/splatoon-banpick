@@ -1,13 +1,9 @@
 "use client";
 import styles from "./page.module.css";
 import { Header } from "@/components/header/Header";
-import { Result } from "@/components/result/Result";
-import { Stages } from "@/components/stage/Stages";
-import { StageState, useAppState } from "@/hooks/useAppState";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [appState, setAppState] = useAppState();
   const [isClient, setIsClient] = useState(false);
 
   // TODO: search best practice
@@ -15,22 +11,14 @@ export default function Home() {
     setIsClient(true);
   }, []);
 
-  const setStageState = useCallback(
-    (state: StageState) => {
-      setAppState({ stageState: state });
-    },
-    [setAppState],
-  );
-
   return (
     isClient && (
       <main className={styles.main}>
         <Header />
-        <Stages
-          state={appState.stageState}
-          onChangeStageState={setStageState}
-        />
-        <Result activeStages={appState.stageState.activeStatges} />
+        <div className={styles.container}>
+          <h1>Banpicktoon</h1>
+          <button className={styles.newSession}>新しく始める</button>
+        </div>
       </main>
     )
   );
