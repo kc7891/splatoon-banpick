@@ -4,21 +4,22 @@ import styles from "./result.module.css";
 import cx from "classnames";
 import { RULE } from "@/constants/rule";
 import { AppState } from "@/hooks/useAppState";
-import { STAGE } from "@/constants/stage";
+import { STAGE, StageKey } from "@/constants/stage";
+import { RuleType } from "@/types/database";
 
 const PickColumn: FC<{
-  activeStages: { name: string; path: string }[];
-}> = ({ activeStages }) => {
-  const [stageIndex, setStageIndex] = useState<number>(-1);
-  const [ruleKey, setRuleKey] = useState<string>("");
-
+  stageKey?: StageKey;
+  ruleKey?: RuleType;
+  stages: StageKey[];
+  onChangeValue?: (stageKey: StageKey, rule: RuleType) => void;
+}> = ({ stages, stageKey = "none", ruleKey = "none", onChangeValue }) => {
   const stage = useMemo(
-    () => activeStages[stageIndex],
-    [activeStages, stageIndex],
+    () => (stageKey && stageKey !== "none" ? STAGE[stageKey] : undefined),
+    [stageKey],
   );
   const rule = useMemo(
     () =>
-      ruleKey in RULE
+      ruleKey && ruleKey in RULE
         ? ((RULE as any)[ruleKey] as (typeof RULE)[keyof typeof RULE])
         : undefined,
     [ruleKey],
@@ -31,21 +32,21 @@ const PickColumn: FC<{
       if (!value) {
         return;
       }
-      setStageIndex(Number(value));
+      if (onChangeValue) onChangeValue(value as StageKey, ruleKey);
     },
-    [],
+    [onChangeValue, ruleKey],
   );
 
   const handleSelectRule = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const value = e.target.value;
       if (!value) {
-        setRuleKey("");
+        if (onChangeValue) onChangeValue(stageKey, "none");
         return;
       }
-      setRuleKey(value);
+      if (onChangeValue) onChangeValue(stageKey, value as RuleType);
     },
-    [],
+    [onChangeValue, stageKey],
   );
 
   return (
@@ -53,14 +54,15 @@ const PickColumn: FC<{
       <div>
         <select
           className={styles.stageSelect}
-          value={`${stageIndex}`}
+          value={stageKey}
           onChange={handleSelectStage}
         >
-          <option value="-1">マップ選択</option>
-          {activeStages.map((stage, index) => {
+          <option value="none">マップ選択</option>
+          {stages.map((stageKey) => {
+            const stage = stageKey !== "none" ? STAGE[stageKey] : undefined;
             return (
-              <option key={stage.name} value={index}>
-                {stage.name}
+              <option key={stageKey} value={stageKey}>
+                {stage?.name}
               </option>
             );
           })}
@@ -188,27 +190,34 @@ const ResultRow: FC<{ children: ReactNode }> = ({ children }) => {
   );
 };
 
-const MAX_GAME = 3;
 export const Result: FC<{
   stages: AppState["stages"];
-}> = ({ stages: activeStages }) => {
-  const availableStages = useMemo(() => {
-    const activeStageKeys = activeStages.filter(
-      (stage) => stage.bannedBy !== "none",
-    );
-    return activeStageKeys.map((stage) => {
-      const { name, path } = STAGE[stage.stageKey];
-      return { name, path };
-    });
-  }, [activeStages]);
+  results: AppState["result"];
+  onChangeState?: (stages: Partial<AppState>) => void;
+}> = ({ stages, results, onChangeState }) => {
+  const availableStageKeys = useMemo(() => {
+    return stages
+      .filter((stage) => stage.bannedBy === "none")
+      .map((stage) => stage.stageKey);
+  }, [stages]);
 
-  //   TODO: activeStagesの選択が切り替わったら、選択状態を全て削除しているが、雑実装なので要修正
-  const rowIds = useMemo(() => {
-    return new Array(MAX_GAME).fill(0).map(() => {
-      return `${Math.random()}`;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStages]);
+  const updateResult = useCallback(
+    (index: number, stageKey: StageKey, ruleKey: RuleType) => {
+      if (!onChangeState) return;
+      onChangeState({
+        result: results.map((data, i) => {
+          if (i === index) {
+            return {
+              pickedStageKey: stageKey,
+              pickedRule: ruleKey,
+            };
+          }
+          return data;
+        }),
+      });
+    },
+    [onChangeState, results],
+  );
 
   return (
     <div className={styles.container}>
@@ -217,11 +226,18 @@ export const Result: FC<{
           <div className={cx(styles.teamCol, styles.alphaCol)}>アルファ</div>
           <div className={cx(styles.teamCol, styles.bravoCol)}>ブラボー</div>
         </li>
-        {rowIds.map((id) => {
+        {results?.map((data, index) => {
           return (
-            <li key={id} className={cx(styles.row, styles.content)}>
+            <li key={index} className={cx(styles.row, styles.content)}>
               <ResultRow>
-                <PickColumn activeStages={availableStages} />
+                <PickColumn
+                  stageKey={data.pickedStageKey}
+                  ruleKey={data.pickedRule}
+                  stages={availableStageKeys}
+                  onChangeValue={(stageKey, rule) =>
+                    updateResult(index, stageKey, rule)
+                  }
+                />
               </ResultRow>
             </li>
           );

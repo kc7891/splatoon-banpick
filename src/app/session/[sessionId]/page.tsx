@@ -57,14 +57,15 @@ export default function Session() {
           bannedBy: "none",
         }) as const,
     );
-    setDatabase({ stages, result: [] });
+    setDatabase({
+      stages,
+      result: [
+        { pickedStageKey: "none" },
+        { pickedStageKey: "none" },
+        { pickedStageKey: "none" },
+      ],
+    });
   }, [setDatabase]);
-
-  useEffect(() => {
-    if (appState.stages.length === 0) {
-      setNewStage();
-    }
-  }, [appState.stages.length, setNewStage]);
 
   return (
     isClient && (
@@ -73,7 +74,11 @@ export default function Session() {
           <button onClick={setNewStage}>Stageを更新</button>
         </Header>
         <Stages stages={appState.stages} onChangeStageState={setDatabase} />
-        <Result stages={appState.stages} />
+        <Result
+          stages={appState.stages}
+          results={appState.result}
+          onChangeState={setDatabase}
+        />
       </main>
     )
   );

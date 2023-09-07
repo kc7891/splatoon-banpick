@@ -8,10 +8,10 @@ export type AppState = {
     bannedBy: TeamType;
   }>;
   result: Array<{
-    pickedStageKey: StageKey;
-    pickedBy: TeamType;
-    pickedRule: RuleType;
-    wonBy: TeamType;
+    pickedStageKey?: StageKey | "none";
+    pickedBy?: TeamType | "none";
+    pickedRule?: RuleType | "none";
+    wonBy?: TeamType | "none";
   }>;
 };
 

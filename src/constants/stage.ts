@@ -29,4 +29,4 @@ export const STAGE = {
   ohyo: { name: "オヒョウ海運", path: "/stage/S3_ohyo.png" },
 } as const;
 
-export type StageKey = keyof typeof STAGE;
+export type StageKey = keyof typeof STAGE | "none";
