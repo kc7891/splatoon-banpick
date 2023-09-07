@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FC, ReactNode, useCallback, useMemo, useState } from "react";
+import { FC, ReactNode, useCallback, useMemo } from "react";
 import styles from "./result.module.css";
 import cx from "classnames";
 import { RULE } from "@/constants/rule";
