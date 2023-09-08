@@ -31,7 +31,6 @@ export default function Session() {
       if (!setDatabase) return;
 
       const isResultEmpty = checkResultEmpty(appState.result);
-      console.log(isResultEmpty);
       if (
         !isResultEmpty &&
         !confirm("Pick・試合結果をリセットしますがよろしいですか？")
