@@ -212,6 +212,7 @@ export const Result: FC<{
     ) => {
       if (!onChangeState) return;
       onChangeState({
+        stages: stages,
         result: results.map((data, i) => {
           if (i === index) {
             const update = {
@@ -235,7 +236,7 @@ export const Result: FC<{
         }),
       });
     },
-    [onChangeState, results],
+    [onChangeState, results, stages],
   );
 
   return (
