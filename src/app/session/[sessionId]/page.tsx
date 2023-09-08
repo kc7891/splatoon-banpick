@@ -22,6 +22,7 @@ export default function Session() {
 
   const [appState, setAppState] = useAppState();
   const [isClient, setIsClient] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [setDatabase, onDatabaseValueChange] = useSessionDatabase(sessionId);
 
   const setAppStateWithDatabase = useCallback(
@@ -38,6 +39,9 @@ export default function Session() {
   // TODO: search best practice
   useEffect(() => {
     setIsClient(true);
+    setTimeout(() => {
+      setIsLoaded(true);
+    },1000)
   }, []);
 
   const isSubscribed = useRef(false);
@@ -68,10 +72,14 @@ export default function Session() {
   }, [setDatabase]);
 
   return (
-    isClient && (
+    !isClient ? null : isClient && appState.stages.length === 0 ? 
       <main className={styles.main}>
+        <Header></Header>
+        {isLoaded && <div className={styles.newGameContainer}><button className={styles.setStageButtonLarge} onClick={setNewStage}>ゲームを始める</button></div>}
+      </main> 
+      : (<main className={styles.main}>
         <Header>
-          <button onClick={setNewStage}>Stageをセット</button>
+          <button onClick={setNewStage}>new game</button>
         </Header>
         <Stages stages={appState.stages} onChangeStageState={setDatabase} />
         <Result

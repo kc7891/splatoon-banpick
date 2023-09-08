@@ -18,7 +18,11 @@ export type AppState = {
 export const useAppState = () => {
   const [state, setState] = useState<AppState>({
     stages: [],
-    result: [],
+    result: [
+      { pickedStageKey: "none" },
+      { pickedStageKey: "none" },
+      { pickedStageKey: "none" },
+    ],
   });
 
   const setPartialState = (partialState: Partial<AppState>) => {

@@ -28,7 +28,7 @@ export default function Home() {
             href={`/session/${sessionRef.current}`}
             className={styles.newSession}
           >
-            新しく始める
+            部屋を作る
           </Link>
         </div>
       </main>
