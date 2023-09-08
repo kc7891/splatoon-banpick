@@ -2,17 +2,21 @@ import { StageKey } from "@/constants/stage";
 import { TeamType, RuleType } from "@/types/database";
 import { useState } from "react";
 
+export type Stage = {
+  stageKey: StageKey;
+  bannedBy: TeamType;
+};
+
+export type Result = {
+  pickedStageKey?: StageKey | "none";
+  pickedBy?: TeamType | "none";
+  pickedRule?: RuleType | "none";
+  wonBy?: TeamType | "none";
+};
+
 export type AppState = {
-  stages: Array<{
-    stageKey: StageKey;
-    bannedBy: TeamType;
-  }>;
-  result: Array<{
-    pickedStageKey?: StageKey | "none";
-    pickedBy?: TeamType | "none";
-    pickedRule?: RuleType | "none";
-    wonBy?: TeamType | "none";
-  }>;
+  stages: Stage[];
+  result: Result[];
 };
 
 export const useAppState = () => {

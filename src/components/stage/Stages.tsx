@@ -49,7 +49,7 @@ const Stage: FC<{
 
 export const Stages: FC<{
   stages: AppState["stages"];
-  onChangeStageState?: (stages: Partial<AppState>) => void;
+  onChangeStageState?: (stages: AppState) => void;
 }> = ({ stages, onChangeStageState = noop }) => {
   const switchBan = useCallback(
     (targetKey: string, bannedBy: TeamType) => {

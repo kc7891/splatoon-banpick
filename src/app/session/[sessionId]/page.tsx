@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 import { Header } from "@/components/header/Header";
 import { Result } from "@/components/result/Result";
 import { Stages } from "@/components/stage/Stages";
-import { useAppState } from "@/hooks/useAppState";
+import { AppState, useAppState } from "@/hooks/useAppState";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useSessionDatabase } from "@/hooks/useDatabase";
@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 import { getRandomStageKeys } from "@/logics/stage/getRandomStages";
 import equal from "fast-deep-equal";
 import { SessionData } from "@/types/database";
+import { checkResultEmpty } from "@/logics/result/checkResultEmpty";
 
 export default function Session() {
   const pathname = usePathname();
@@ -24,6 +25,22 @@ export default function Session() {
   const [isClient, setIsClient] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [setDatabase, onDatabaseValueChange] = useSessionDatabase(sessionId);
+
+  const setDatabaseWithConfirm = useCallback(
+    (data: AppState) => {
+      if (!setDatabase) return;
+
+      const isResultEmpty = checkResultEmpty(appState.result);
+      console.log(isResultEmpty);
+      if (
+        !isResultEmpty &&
+        !confirm("Pick・試合結果をリセットしますがよろしいですか？")
+      )
+        return;
+      setDatabase(data);
+    },
+    [appState.result, setDatabase],
+  );
 
   const setAppStateWithDatabase = useCallback(
     (value: SessionData) => {
@@ -41,7 +58,7 @@ export default function Session() {
     setIsClient(true);
     setTimeout(() => {
       setIsLoaded(true);
-    },1000)
+    }, 1000);
   }, []);
 
   const isSubscribed = useRef(false);
@@ -53,7 +70,6 @@ export default function Session() {
   }
 
   const setNewStage = useCallback(() => {
-    if (!setDatabase) return;
     const stages = getRandomStageKeys(6).map(
       (key) =>
         ({
@@ -61,7 +77,7 @@ export default function Session() {
           bannedBy: "none",
         }) as const,
     );
-    setDatabase({
+    setDatabaseWithConfirm({
       stages,
       result: [
         { pickedStageKey: "none" },
@@ -69,25 +85,33 @@ export default function Session() {
         { pickedStageKey: "none" },
       ],
     });
-  }, [setDatabase]);
+  }, [setDatabaseWithConfirm]);
 
-  return (
-    !isClient ? null : isClient && appState.stages.length === 0 ? 
-      <main className={styles.main}>
-        <Header></Header>
-        {isLoaded && <div className={styles.newGameContainer}><button className={styles.setStageButtonLarge} onClick={setNewStage}>ゲームを始める</button></div>}
-      </main> 
-      : (<main className={styles.main}>
-        <Header>
-          <button onClick={setNewStage}>new game</button>
-        </Header>
-        <Stages stages={appState.stages} onChangeStageState={setDatabase} />
-        <Result
-          stages={appState.stages}
-          results={appState.result}
-          onChangeState={setDatabase}
-        />
-      </main>
-    )
+  return !isClient ? null : isClient && appState.stages.length === 0 ? (
+    <main className={styles.main}>
+      <Header></Header>
+      {isLoaded && (
+        <div className={styles.newGameContainer}>
+          <button className={styles.setStageButtonLarge} onClick={setNewStage}>
+            ゲームを始める
+          </button>
+        </div>
+      )}
+    </main>
+  ) : (
+    <main className={styles.main}>
+      <Header>
+        <button onClick={setNewStage}>new game</button>
+      </Header>
+      <Stages
+        stages={appState.stages}
+        onChangeStageState={setDatabaseWithConfirm}
+      />
+      <Result
+        stages={appState.stages}
+        results={appState.result}
+        onChangeState={setDatabase}
+      />
+    </main>
   );
 }

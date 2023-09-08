@@ -24,7 +24,7 @@ const firebaseConfig = {
 export const useSessionDatabase = (sessionId: string) => {
   const appRef = useRef<FirebaseApp>();
   const setValue = useCallback(
-    (partialSessionData: Partial<SessionData>) => {
+    (partialSessionData: SessionData) => {
       const db = getDatabase();
       console.log("set", partialSessionData);
       set(ref(db, sessionId), partialSessionData);

@@ -193,7 +193,7 @@ const ResultRow: FC<{
 export const Result: FC<{
   stages: AppState["stages"];
   results: AppState["result"];
-  onChangeState?: (stages: Partial<AppState>) => void;
+  onChangeState?: (stages: AppState) => void;
 }> = ({ stages, results, onChangeState }) => {
   const availableStageKeys = useMemo(() => {
     return stages
